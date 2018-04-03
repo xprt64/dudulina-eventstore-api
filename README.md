@@ -3,7 +3,7 @@ A HTTP API for a Dudulina Event Store
 
 It is a HTTP interface to read the events from the [Mongolina](https://github.com/xprt64/mongolina) wich is an Event store implementation for [Dudulina CQRS framework](https://github.com/xprt64/dudulina).
 
-The idea behind this project is that it permits building of Read models that use any programming language, not only PHP.
+The idea behind this project is to permit the building of **Read models in any programming language**, not only PHP.
 
 ## Listing of events from all Aggregate streams
 
