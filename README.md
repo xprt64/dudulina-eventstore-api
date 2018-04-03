@@ -100,4 +100,12 @@ The list is navigable to the next chunk of events by containing a `links` sectio
 
 This API is described by a [RAML file](https://github.com/xprt64/dudulina-eventstore-api/blob/master/web/api.raml).
 
- 
+## Installing - deploy
+
+The API can be deployed using docker using the Dockerfile. 
+The only configuration is the Mongo connect string that can passed as environment variable named `MONGO_EVENT_STORE_DSN`.
+
+```
+docker build -t event-store/http-api . && \
+docker run -e MONGO_EVENT_STORE_DSN=mongodb://localhost:27017/eventStore -p "80:80" event-store/http-api
+```
