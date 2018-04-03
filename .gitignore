@@ -1,0 +1,10 @@
+.idea
+composer.lock
+vendor
+/src/Gica/Infrastructure/Cqrs/CommandValidatorSubscriber.php
+/src/Gica/Infrastructure/Cqrs/CommandHandlerSubscriber.php
+/src/Gica/Infrastructure/Cqrs/EventSubscriber.php
+/src/Gica/Infrastructure/Cqrs/ReadModelMap.php
+/src/Gica/Infrastructure/Cqrs/SagaEventSubscriber.php
+/docker/my.cnf/
+/dynamicReturnTypeMeta.json
