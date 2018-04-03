@@ -1,5 +1,5 @@
 # dudulina-eventstore-api
-A HTTP API for a Dudulina Event Store
+A Restful HTTP API for a Dudulina Event Store
 
 It is a HTTP interface to read the events from the [Mongolina](https://github.com/xprt64/mongolina) wich is an Event store implementation for [Dudulina CQRS framework](https://github.com/xprt64/dudulina).
 
