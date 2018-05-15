@@ -33,3 +33,6 @@ RUN mkdir -p /var/log/app
 RUN chmod -R 0777 /var/log/app
 
 EXPOSE 80
+
+### ENVIRONMENT ###
+# MONGO_EVENT_STORE_DSN=mongodb://localhost:27017/eventStore

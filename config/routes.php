@@ -30,7 +30,15 @@ $routeMiddleware->addRestEndpoint(
 );
 
 $routeMiddleware->addRestEndpoint(
-    '/events', ['GET'], \Gica\Rest\ListEventsEndpoint::class, false, 'route.events.list'
+    '/events/chronologically', ['GET'], \Gica\Rest\ListEventsChronologicallyEndpoint::class, false, 'route.events.list'
+);
+
+$routeMiddleware->addRestEndpoint(
+    '/events/most-recent', ['GET'], \Gica\Rest\ListNewestEventsEndpoint::class, false, 'route.events.newest'
+);
+
+$routeMiddleware->addRestEndpoint(
+    '/events/count', ['GET'], \Gica\Rest\CountEventsEndpoint::class, false, 'route.events.count'
 );
 
 $routeMiddleware->addRestEndpoint(

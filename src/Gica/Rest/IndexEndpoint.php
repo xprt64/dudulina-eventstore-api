@@ -28,9 +28,10 @@ class IndexEndpoint
     {
         return new EndpointResponse(
             [
-                'self'   => $this->urlGenerator->generateUri('route.index'),
-                'events' => $this->urlGenerator->generateUri('route.events.list'),
-                'docs'   => $this->urlGenerator->makeUriAbsolute('/api.raml'),
+                'self'            => $this->urlGenerator->generateUri('route.index'),
+                'chronologically' => $this->urlGenerator->generateUri('route.events.list'),
+                'recent'          => $this->urlGenerator->generateUri('route.events.newest'),
+                'docs'            => $this->urlGenerator->makeUriAbsolute('/api.raml'),
             ],
             200
         );

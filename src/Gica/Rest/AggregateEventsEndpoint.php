@@ -8,7 +8,6 @@ namespace Gica\Rest;
 
 
 use Dudulina\Aggregate\AggregateDescriptor;
-use Gica\Infrastructure\Http\ParameterInjecterMiddleware\CustomHydrator\MongoTimestampRehydrator;
 use Gica\Iterator\IteratorTransformer\IteratorExpander;
 use Gica\Rest\Endpoint\EndpointResponse;
 use Gica\Rest\Endpoint\EventToJsonSerializer;
@@ -44,7 +43,7 @@ class AggregateEventsEndpoint
         $this->eventToJsonSerializer = $eventToJsonSerializer;
     }
 
-    public function __invoke(string $aggregateClass, Guid $aggregateId, int $after = null, int $limit = 10)
+    public function __invoke(string $aggregateClass, Guid $aggregateId, int $after = -1, int $limit = 10)
     {
 
         $aggregateClass = str_replace('\\\\', '\\', $aggregateClass);
@@ -62,7 +61,7 @@ class AggregateEventsEndpoint
             'first' => $this->absoluteUrlGenerator->generateUri('route.aggregate.stream') . '?aggregateClass=' . $aggregateClass . '&aggregateId=' . $aggregateId . '&after=-1' . '&limit=' . $limit,
         ];
 
-        $lastEvent = $events[count($events) - 1];
+        $lastEvent = $events[\count($events) - 1];
 
         $headers = [];
 
@@ -96,12 +95,12 @@ class AggregateEventsEndpoint
         return iterator_to_array($iterator($cursor), false);
     }
 
-    private function factoryEventExtractorIterator()
+    private function factoryEventExtractorIterator():IteratorExpander
     {
         return new IteratorExpander(function ($document) {
-            foreach ($document['events'] as $eventSubDocument) {
+            foreach ($document[MongoEventStore::EVENTS] as $eventSubDocument) {
                 $newDocument = $document;
-                $newDocument['events'] = $eventSubDocument;
+                $newDocument[MongoEventStore::EVENTS] = $eventSubDocument;
                 yield $this->eventToJsonSerializer->serializeEvent($newDocument);
             }
         });

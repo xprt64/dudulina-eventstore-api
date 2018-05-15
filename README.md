@@ -112,3 +112,9 @@ The only configuration is the Mongo connect string that can passed as environmen
 docker build -t event-store/http-api . && \
 docker run -e MONGO_EVENT_STORE_DSN=mongodb://localhost:27017/eventStore -p "80:80" event-store/http-api
 ```
+
+You can use docker secrets instead of clear-text passwords:
+```
+docker build -t event-store/http-api . && \
+docker run -e MONGO_EVENT_STORE_DSN=mongodb://{/run/secrets/MONGODB_CREDENTIALS}localhost:27017/eventStore -p "80:80" event-store/http-api
+```

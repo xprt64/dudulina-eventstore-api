@@ -1,13 +1,13 @@
 <?php
-
+/**
+ * Copyright (c) 2018. Galbenu Constantin <xprt64@gmail.com>
+ */
 
 namespace Gica\Rest\Endpoint;
 
 
-use Dudulina\Aggregate\AggregateDescriptor;
 use Gica\Infrastructure\ToJsonObjectSerializer;
 use Gica\Rest\Helper\AbsoluteUrlCreator;
-use Mongolina\StreamName;
 
 class EventToJsonSerializer
 {

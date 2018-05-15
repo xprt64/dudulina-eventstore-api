@@ -14,10 +14,12 @@ use Gica\Rest\Endpoint\EndpointResponse;
 use Gica\Rest\Endpoint\EventToJsonSerializer;
 use Gica\Rest\Helper\AbsoluteUrlCreator;
 use MongoDB\BSON\Timestamp;
+use Mongolina\EventSequence;
+use Mongolina\MongoAllEventByClassesStream;
 use Mongolina\MongoEventStore;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ListEventsEndpoint implements CacheableByDateEndpoint
+class ListEventsChronologicallyEndpoint implements CacheableByDateEndpoint
 {
     /**
      * @var AbsoluteUrlCreator
@@ -67,14 +69,14 @@ class ListEventsEndpoint implements CacheableByDateEndpoint
         if (\count($events) > $limit) {
             $events = \array_slice($events, 0, $limit);
             $lastEvent = $events[$limit - 1];
-            $links['next'] = $this->absoluteUrlGenerator->generateUri('route.events.list') . '?after=' . ($lastEvent['meta']['ts']) . '&limit=' . $limit;
+            $links['next'] = $this->absoluteUrlGenerator->generateUri('route.events.list') . '?after=' . $lastEvent['meta']['ts'] . '&limit=' . $limit;
         }
 
         return new EndpointResponse(
             [
+                'links'  => $links,
                 'events' => $events,
-                'links' => $links,
-                'stats' => [
+                'stats'  => [
                     'pageLoadDuration'   => microtime(true) - PAGE_LOAD_TIME,
                     'queryFetchDuration' => microtime(true) - $beforeFetchTime,
                 ],
@@ -83,7 +85,7 @@ class ListEventsEndpoint implements CacheableByDateEndpoint
         );
     }
 
-    private function fetchEventsFromStream(\Mongolina\MongoAllEventByClassesStream $stream): array
+    private function fetchEventsFromStream(MongoAllEventByClassesStream $stream): array
     {
         $iterator = $this->factoryEventExtractorIterator();
         return iterator_to_array($iterator($stream->getCursorForEvents()), false);
@@ -106,7 +108,7 @@ class ListEventsEndpoint implements CacheableByDateEndpoint
         }
 
         $events = $this->loadEvents($after, (int)$get['limit'], $get['classes'] ?: []);
-        $lastEvent = $events[count($events) - 1];
+        $lastEvent = $events[\count($events) - 1];
 
         return new \DateTimeImmutable($lastEvent['meta']['createdAt']);
     }
@@ -115,11 +117,11 @@ class ListEventsEndpoint implements CacheableByDateEndpoint
     {
         $fetchLimit = $limit + 1;
 
-        /** @var \Mongolina\MongoAllEventByClassesStream $stream */
+        /** @var MongoAllEventByClassesStream $stream */
         $stream = $this->mongoEventStore->loadEventsByClassNames($classes);
 
         if ($after) {
-            $stream->afterTimestamp($after);
+            $stream->afterSequence(new EventSequence($after, 0));
         }
         $stream->limitCommits($fetchLimit);
 
